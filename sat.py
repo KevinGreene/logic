@@ -1,4 +1,5 @@
 from random import randint
+from random import sample
 from copy import deepcopy
 
 class SatClause:
@@ -9,7 +10,7 @@ class SatClause:
 
         self.clause = set()
         for arg in args:
-            clause.add(arg)
+            self.clause.add(arg)
 
     def __str__(self):
         '''
@@ -96,10 +97,10 @@ def dpll(clauses, variable_map):
             new_clauses.append(clause)
 
     if(len(new_clauses)==0):
-        return true
+        return True
 
     first = new_clauses[0]
-    elem = iter(first.clause).next()
+    elem = sample(first.clause,1)[0]
     not_elem = elem
     if elem[0] == "!":
         not_elem = elem[1]
@@ -129,4 +130,21 @@ if __name__ == "__main__":
     for clause in clauses:
         print(clause)
     print(dpll(clauses, {}))
+    clauses = []
+    for i in range(26):
+        clauses.append(generateClause(3))
+    print(dpll(clauses,{}))
+    clauses = []
+
+# This represents an unsatisfiable set of clauses
+    clauses.append(SatClause("A","B","C"))
+    clauses.append(SatClause("A","B","!C"))
+    clauses.append(SatClause("A","!B","C"))
+    clauses.append(SatClause("A","!B","!C"))
+    clauses.append(SatClause("!A","B","C"))
+    clauses.append(SatClause("!A","B","!C"))
+    clauses.append(SatClause("!A","!B","C"))
+    clauses.append(SatClause("!A","!B","!C"))
+
+    print(dpll(clauses,{}))
 
